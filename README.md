@@ -26,7 +26,7 @@ If you are abroad and have no network issues accessing GitHub, you can build wit
 Since the Chinese network cannot access GitHub, which will lead to a build failure, a proxy needs to be introduced for downloading when GitHub cannot be accessed. Follow the steps below:
 
 本dockerfile基于代理构建，前提是条件需要自己搭建http代理访问github, 因为不经过代理，构建会失败。
-如果你在国外访问githb无网络问题，可以不经过代理，你可以基于我的dockerfile进行改造，去掉代理。
+如果你在国外访问github无网络问题，可以不经过代理，你可以基于我的dockerfile进行改造，去掉代理。
 由于中国网络无法访问github会导致构建失败，所以在无法访问github的情况需要引入代理进行下载，执行以下步骤：
 
 #Set Your Proxy
