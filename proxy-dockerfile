@@ -1,0 +1,62 @@
+
+# 定义代理，设置默认值
+ARG HTTP_PROXY=http://192.168.10.1:10809
+ARG HTTPS_PROXY=http://192.168.10.1:10809
+
+# 第一阶段：构建前端
+FROM node:20.16.0 as web_compile
+
+ENV HTTP_PROXY=${HTTP_PROXY}
+ENV HTTPS_PROXY=${HTTPS_PROXY}
+
+WORKDIR /home
+
+RUN git clone https://github.com/kvcache-ai/ktransformers.git && \
+    cd ktransformers/ktransformers/website/ && \
+    npm install @vue/cli && \
+    npm run build && \
+    rm -rf node_modules
+
+
+# 第二阶段：编译和运行环境
+FROM pytorch/pytorch:2.6.0-cuda12.6-cudnn9-devel as compile_server
+
+ENV HTTP_PROXY=${HTTP_PROXY}
+ENV HTTPS_PROXY=${HTTPS_PROXY}
+
+WORKDIR /workspace
+ENV CUDA_HOME /usr/local/cuda
+ENV CMAKE_BUILD_PARALLEL_LEVEL 24
+#ENV LD_PRELOAD /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+# 复制从web_compile阶段得到的前端文件
+COPY --from=web_compile /home/ktransformers /workspace/ktransformers
+
+# 将本地已经准备好的third_party目录添加到镜像中
+COPY  ktransformers/third_party /workspace/ktransformers/third_party
+
+COPY ktransformers-0.3.0rc0+cu126torch26fancy-cp311-cp311-linux_x86_64.whl /workspace/ktransformers/
+# 安装必要的工具和库
+RUN   apt-get update -y && apt-get install -y --no-install-recommends && apt install software-properties-common -y  && add-apt-repository ppa:ubuntu-toolchain-r/test &&  apt-get install  -y --only-upgrade libstdc++6  \
+    git \
+    wget \
+    vim \
+    gcc \
+    g++ \
+    cmake && \
+    rm -rf /var/lib/apt/lists/* && \
+    cd ktransformers && \
+    pip install ninja pyproject numpy cpufeature && \
+    pip install flash-attn &&  \
+    CPU_INSTRUCT=${CPU_INSTRUCT}  KTRANSFORMERS_FORCE_BUILD=TRUE TORCH_CUDA_ARCH_LIST="8.0;8.6;8.7;8.9;9.0+PTX" pip install . --no-build-isolation --verbose &&  \
+    cp /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /opt/conda/lib/ && \
+    pip install /workspace/ktransformers/ktransformers-0.3.0rc0+cu126torch26fancy-cp311-cp311-linux_x86_64.whl && \
+    cd  /workspace/ktransformers/ktransformers/ktransformers/ktransformers_ext/cuda/  &&  python setup.py develop && \
+    ln -sf /workspace/ktransformers/ktransformers/ktransformers_ext/cuda/KTransformersOps.cpython-311-x86_64-linux-gnu.so /opt/conda/lib/python3.11/site-packages/KTransformersOps.cpython-311-x86_64-linux-gnu.so && \   
+    pip cache purge
+
+
+# 取消代理设置
+ENV HTTP_PROXY=
+ENV HTTPS_PROXY=
+
+ENTRYPOINT ["tail", "-f", "/dev/null"]
