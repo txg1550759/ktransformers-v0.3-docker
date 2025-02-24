@@ -1,7 +1,9 @@
 # ktransformers-v0.3-docker
 ktransformers v0.3 docker build and run
 
-由于中国网络无法访问github会导致构建失败，所以在无法访问github的情况需要引入代理进行下载，执行以下步骤，如不需要代理，可以自行改造去掉代理：
+本dockerfile基于代理构建，前掉条件需要自己搭建http代理访问github, 因为不经过代理，构建会失败。
+
+由于中国网络无法访问github会导致构建失败，所以在无法访问github的情况需要引入代理进行下载，执行以下步骤：
 
 #设置你的proxy
 ```
@@ -23,7 +25,7 @@ git submodule update
 wget https://github.com/kvcache-ai/ktransformers/releases/download/v0.1.4/ktransformers-0.3.0rc0+cu126torch26fancy-cp311-cp311-linux_x86_64.whl
 ```
 
-3、下载proxy-dockerfile，重命名为Dockerfile， 构建你的镜像
+3、下载本仓库proxy-dockerfile内容，重命名为Dockerfile， 构建你的镜像
 ```
 docker build  -t   test-ktransformers:v0.3 .
 ```
