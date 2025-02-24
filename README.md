@@ -29,7 +29,7 @@ Since the Chinese network cannot access GitHub, which will lead to a build failu
 如果你在国外访问githb无网络问题，可以不经过代理，你可以基于我的dockerfile进行改造，去掉代理。
 由于中国网络无法访问github会导致构建失败，所以在无法访问github的情况需要引入代理进行下载，执行以下步骤：
 
-# Set Your Proxy
+#Set Your Proxy
 
 #设置你的proxy
 
