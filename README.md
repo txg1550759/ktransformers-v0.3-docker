@@ -4,13 +4,13 @@ ktransformers v0.3 docker build and run
 由于中国网络无法访问github会导致构建失败，所以在无法访问github的情况需要引入代理进行下载，执行以下步骤，如不需要代理，可以自行改造去掉代理：
 
 #设置你的proxy
-bash ```
+```
 export  http_proxy=http://192.168.1.10:10809
 export https_proxy=http://192.168.1.10:10809
 ```
 
 1、生成依赖文件third_party
-bash ```
+ ```
 mkdir -p build-v0.3
 cd build-v0.3/
 git clone https://github.com/kvcache-ai/ktransformers.git 
