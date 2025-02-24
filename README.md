@@ -63,7 +63,7 @@ docker build  -t   test-ktransformers:v0.3 .
 ```
 4、For CPUs That Do Not Support AMX Instructions, Run the Following Commands
 
-4、普通不支持AMX的CPU指令的请运行，
+4、普通不支持AMX的CPU指令的请运行
 ```
 docker run --gpus all  -v /data/LLM_Project/DeepSeek-R1-GGUF/DeepSeek-R1-Q4_K_M:/models --name ktransformers -itd test-ktransformers:v0.3
 docker exec -it ktransformers /bin/bash
