@@ -1,9 +1,27 @@
 # ktransformers-v0.3-docker
 ktransformers v0.3 docker build and run
 
+目前环境硬件配置：
+```
+至强第三代cpu, 2块Intel(R) Xeon(R) Gold 5320, 2块A800 80G，512G DDR4 内存，模型是DeepSeek-R1-GGUF/DeepSeek-R1-Q4_K_M
+
+```
+软件环境配置:
+```
+cuda12.6
+python3.11
+pytorch/pytorch:2.6.0-cuda12.6-cudnn9-devel
+flash_attn                2.7.4.post1
+GLIBCXX_3.4.32
+
+```
+
+
 本dockerfile基于代理构建，前提是条件需要自己搭建http代理访问github, 因为不经过代理，构建会失败。
+如果你在国外访问githb无网络问题，可以不经过代理，你可以基于我的dockerfile进行改造，去掉代理。
 
 由于中国网络无法访问github会导致构建失败，所以在无法访问github的情况需要引入代理进行下载，执行以下步骤：
+
 
 #设置你的proxy
 ```
@@ -29,7 +47,7 @@ wget https://github.com/kvcache-ai/ktransformers/releases/download/v0.1.4/ktrans
 ```
 docker build  -t   test-ktransformers:v0.3 .
 ```
-4、普通不支持AMX的CPU指令的请运行， 目前我测试的是至强第三代cpu, 2块Intel(R) Xeon(R) Gold 5320, 2块A800 80G，512G内存，报core dumped
+4、普通不支持AMX的CPU指令的请运行，
 ```
 docker run --gpus all  -v /data/LLM_Project/DeepSeek-R1-GGUF/DeepSeek-R1-Q4_K_M:/models --name ktransformers -itd test-ktransformers:v0.3
 docker exec -it ktransformers /bin/bash
