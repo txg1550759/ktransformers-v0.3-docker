@@ -1,7 +1,7 @@
 
 # 定义代理，设置默认值
-ARG HTTP_PROXY=http://192.168.10.1:10809
-ARG HTTPS_PROXY=http://192.168.10.1:10809
+ARG HTTP_PROXY=http://192.168.1.10:10809
+ARG HTTPS_PROXY=http://192.168.1.10:10809
 
 # 第一阶段：构建前端
 FROM node:20.16.0 as web_compile
