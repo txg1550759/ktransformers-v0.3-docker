@@ -18,7 +18,7 @@ python3.11
 pytorch/pytorch:2.6.0-cuda12.6-cudnn9-devel
 flash_attn                2.7.4.post1
 GLIBCXX_3.4.32
-nvidia-container-toolkit-1.16.1-1.x86_64
+nvidia-container-toolkit.x86_64
 
 
 Note: You need to install the nvidia-container-toolkit on the physical machine to call the GPU.
